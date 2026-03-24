@@ -146,7 +146,7 @@ def register_callbacks(app, df, filt):
         fig_map.update_layout(    
             mapbox_style="open-street-map",
                 paper_bgcolor=Colors["bg"],
-                font=dict(color="black"),
+                font=dict(color="white"),
                 margin=dict(l=0, r=0, t=30, b=0),
                 legend=dict(
                 yanchor="top",
