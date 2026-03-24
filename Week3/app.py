@@ -13,25 +13,29 @@ from components.navbar import create_navbar
 from pages.general import layout_general
 from pages.espera import layout_espera
 from pages.departamentos import layout_departamentos
-#from pages.tendencia import layout_tendencia
+from pages.tendencia import layout_tendencia
+from pages.popup_welcome import layout_popup_welcome
 
 # ── Callbacks ─────────────────────────────────────────────────────
 from callbacks.general_cb import register_callbacks as general_cb
 from callbacks.espera_cb import register_callbacks as espera_cb
 from callbacks.departamentos_cb import register_callbacks as dep_cb
-#from callbacks.tendencia_cb import register_callbacks as ten_cb
+from callbacks.tendencia_cb import register_callbacks as ten_cb
+from callbacks.popup_welcome_cb import register_callbacks as popup_cb
 
+app = dash.Dash(__name__)
+server = app.server  
 
 # ── Inicialización de la app ──────────────────────────────────────
 app = dash.Dash(__name__, suppress_callback_exceptions=True)
 app.title = "Clinical Analytics Dashboard"
 
-server = app.server 
 
 # ── Layout principal ──────────────────────────────────────────────
 app.layout = html.Div([
     dcc.Location(id="url", refresh=False),
     create_navbar(),
+    layout_popup_welcome(),
     html.Div(id="page-content", 
              style={"minHeight": "calc(100vh - 68px)"})
 ],
@@ -64,8 +68,8 @@ def router(path):
         return layout_espera()
     elif path == "/departamentos":
         return layout_departamentos()
-    #elif path == "/tendencia":
-    #    return layout_tendencia()
+    elif path == "/tendencia":
+        return layout_tendencia()
     else:
         return layout_general()
 
@@ -74,12 +78,13 @@ def router(path):
 general_cb(app, df, filt)
 espera_cb(app, df, filt)
 dep_cb(app, df, filt)
-#ten_cb(app, df, filt)
+ten_cb(app, df, filt)
+popup_cb(app, df, filt)
 
 
 # ── Run app ───────────────────────────────────────────────────────
 # Version local
-# if __name__ == "__main__":
+#if __name__ == "__main__":
 #    app.run(debug=True, port=8050)
 # Version Render
 if __name__ == "__main__":

@@ -22,11 +22,11 @@ def layout_tendencia():
     return html.Div([
         html.Div([
             html.Div([
+                card(create_graph("t-map", h=500)),
                 card(create_graph("t-vol", h=320)),
                 html.Div(style={"height": "18px"}),
                 row2(card(create_graph("t-wait")), 
-                     card(create_graph("t-care"))
-                     ),
+                     card(create_graph("t-care"))),
                 html.Div(style={"height": "18px"}),
                 card(create_graph("t-adm", h=300)),
             ], style={"flex": "1"}),
@@ -37,4 +37,5 @@ def layout_tendencia():
                   }),
     ], style={"padding": "22px", 
               "maxWidth": "1400px", 
-              "margin": "0 auto"})    
+              "margin": "0 auto",
+        "background": Colors["bg"]})    

@@ -45,13 +45,26 @@ def create_navbar():
                     "fontSize": "1.05rem",
                     "marginLeft": "10px"
                 }),
+            html.A(
+                html.Img(
+                    src="/assets/25231.png",
+                    className="logo-hover",
+                    title="Ver repositorio en GitHub",
+                    style={
+                    "height": "40px",
+                    "marginLeft": "10px"
+                    }
+                ),
+                href="https://github.com/ChrisJavier/UIDE_3-WorkGroupProyectsVisu/tree/main/Week3",
+                target="_blank"
+            )                 
             ], style={"display": "flex", "alignItems": "center"}),
 
             html.Div([
                 navlink("Vista General", "/"),
                 navlink("Tiempos de Espera", "/espera"),
                 navlink("Departamentos", "/departamentos"),
-                #navlink("Tendencia Mensual", "/tendencia"),
+                navlink("Tendencia Mensual", "/tendencia"),
             ], style={"display": "flex", 
                       "gap": "4px"}),
 
