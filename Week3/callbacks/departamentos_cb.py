@@ -43,7 +43,12 @@ def register_callbacks(app, df, filt):
         df_vol = dff["Department"].value_counts().reset_index()
         df_vol.columns = ["Department", "Encounters"]
         fig_vol = px.bar(df_vol, x="Encounters", y="Department", orientation="h",
-                        title="Volumen de Consultas por Departamento", color="Encounters",
+                        title="Volumen de Consultas por Departamento", 
+                        labels={
+                                "Encounters": "N° Consultas",
+                                "Department": "Especialidad"
+                            },                        
+                        color="Encounters",
                         color_continuous_scale=[Colors["primary"], Colors["success"]])
         fig_vol.update_layout(**LAYOUT_BASE, coloraxis_showscale=False)
         fig_vol.update_yaxes(categoryorder="total ascending", gridcolor=Colors["border"])
@@ -78,6 +83,10 @@ def register_callbacks(app, df, filt):
                 .mean().round(2).reset_index()
                 .sort_values("Care Score", ascending=False))
         fig_care = px.bar(df_care, x="Department", y="Care Score",
+                      labels={
+                                "Care Score": "Puntaje de Atención",
+                                "Department": "Especialidad"
+                            },                            
                         title="Care Score Promedio por Departamento", color="Care Score",
                         color_continuous_scale=[Colors["danger"], Colors["warning"], Colors["success"]])
         fig_care.update_layout(**LAYOUT_BASE, xaxis_tickangle=-30, coloraxis_showscale=False)
@@ -90,7 +99,12 @@ def register_callbacks(app, df, filt):
         ).reset_index()
         # size necesita valores > 0
         df_score["Count"] = df_score["Count"].clip(lower=1)
-        fig_scat = px.scatter(df_score, x="Wait", y="Care", text="Department", size="Count",
+        fig_scat = px.scatter(df_score, x="Wait", y="Care", 
+                            labels={
+                                "Care": "Puntaje de Atención",
+                                "Wait": "Tiempo de Espera"
+                            },                                  
+                            text="Department", size="Count",
                             title="Espera vs Care Score por Departamento",
                             color_discrete_sequence=[Colors["primary"]])
         fig_scat.update_traces(textposition="top center", textfont_size=9)

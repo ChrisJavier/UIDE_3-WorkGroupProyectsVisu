@@ -36,6 +36,10 @@ def register_callbacks(app, df, filt):
                           x="Month Label", 
                           y="Encounters",
                           title="Consultas Mensuales — 2014", 
+                          labels={
+                           "Month Label": "Mes",
+                           "Encounters": "Consultas"
+                          },                            
                           category_orders=cat,
                           color_discrete_sequence=[Colors["primary"]])
         fig_vol.update_traces(fill="tozeroy", fillcolor="rgba(108,99,255,0.15)", line_width=2.5)
@@ -47,6 +51,10 @@ def register_callbacks(app, df, filt):
                            x="Month Label", 
                            y="Wait Time Min",
                            title="Espera Promedio Mensual", 
+                           labels={
+                            "Month Label": "Mes",
+                            "Wait Time Min": "Tiempo de espera en minutos"
+                           },                                
                            markers=True,
                            category_orders=cat, 
                            color_discrete_sequence=[Colors["warning"]])
@@ -58,6 +66,10 @@ def register_callbacks(app, df, filt):
                            x="Month Label", 
                            y="Care Score",
                            title="Care Score Promedio Mensual", 
+                           labels={
+                            "Month Label": "Mes",
+                            "Care Score": "Puntaje de Atención"
+                           },  
                            markers=True,
                            category_orders=cat, 
                            color_discrete_sequence=[Colors["success"]])
@@ -74,7 +86,8 @@ def register_callbacks(app, df, filt):
                          category_orders=cat)
         fig_adm.update_layout(**LAYOUT_BASE)
 
-        # Cambiar las coordeenadas de cada clinica
+        # Vamos a realizar un mapa con las clinicas que tienen mayor tiempo de atencion 
+        # Agregamos las coordenas de acuerdo a google maps
         coords_df = pd.DataFrame({
         "Clinic Name": ["Lakeview Center", "Madison Center", "Surgery Center"],
         "lat": [41.8781, 43.0731, 34.0522],
@@ -84,18 +97,21 @@ def register_callbacks(app, df, filt):
         dff = dff.merge(coords_df, on="Clinic Name", how="left")
         dff["Wait Time Min"] = dff["Wait Time Min"].clip(lower=0)
 
-        # 2. Agrupación segura (Wait Time y Patients al mismo tiempo)
+        # Agrupación segura (Wait Time y Patients al mismo tiempo) Pacientes con el numero de atencion
+        # Aunque no tenemos informacion del paciente tenemos el id de la consulta que nos sirve
         df_map = dff.groupby(["Clinic Name", "lat", "lon"]).agg(
         **{"Wait Time Min": pd.NamedAgg(column="Wait Time Min", aggfunc="mean")},
         Patients=pd.NamedAgg(column="Encounter Number", aggfunc="count")
         ).reset_index()
 
+        # Creamos una nueva columna de categoria por tiempo de espera
         df_map["Category"] = pd.cut(
         df_map["Wait Time Min"],
         bins=[0, 20, 40, 100],
         labels=["Bajo", "Medio", "Alto"]
         )
 
+        # Dibujamos el mapa
         fig_map = px.scatter_mapbox(
         df_map,
         lat="lat",
@@ -103,6 +119,10 @@ def register_callbacks(app, df, filt):
         color="Wait Time Min",
         size="Wait Time Min",
         zoom= 3 ,
+        labels={
+        "Wait Time Min": "Tiempo de espera en minutos"
+        },         
+        title="Mapa de Estados Unidos con ubicación de las clinicas y su mayor tiempo de atención",
         hover_data={
                 "Wait Time Min": True,
                 "Patients": True
@@ -110,6 +130,7 @@ def register_callbacks(app, df, filt):
         hover_name="Clinic Name"
         )
 
+        # Tenemos el peor tiempo de consulta maximo dentro de las 3 clinicas
         worst = df_map.loc[df_map["Wait Time Min"].idxmax()]
 
         fig_map.add_scattermapbox(
@@ -125,7 +146,7 @@ def register_callbacks(app, df, filt):
         fig_map.update_layout(    
             mapbox_style="open-street-map",
                 paper_bgcolor=Colors["bg"],
-                font=dict(color="white"),
+                font=dict(color="black"),
                 margin=dict(l=0, r=0, t=30, b=0),
                 legend=dict(
                 yanchor="top",

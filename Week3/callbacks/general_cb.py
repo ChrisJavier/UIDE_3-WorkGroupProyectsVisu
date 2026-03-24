@@ -46,6 +46,10 @@ def register_callbacks(app, df, filt):
         df_src = dff["Admit Source"].value_counts().head(6).reset_index()
         df_src.columns = ["Source","Count"]
         fig_src = px.bar(df_src, y="Source", x="Count", orientation="h",
+                        labels={
+                            "Count": "Cantidad de atenciones",
+                            "Source": "Fuente de admición"
+                        },
                         title="Fuente de Admisión (Top 6)",
                         color_discrete_sequence=[Colors["primary"]])
         fig_src.update_layout(**LAYOUT_BASE)
@@ -62,8 +66,12 @@ def register_callbacks(app, df, filt):
 
         fig_care = px.histogram(dff, x="Care Score", 
                                 nbins=9,
-                                title="Distribución del Care Score",
+                                title="Distribución del Puntaje de Atención",
+                                labels={
+                                        "Care Score": "Puntaje de Atención",
+                                        "y": "Frecuencia (N° de Casos)"
+                                    },
                                 color_discrete_sequence=[Colors["success"]])
-        fig_care.update_layout(**LAYOUT_BASE)
+        fig_care.update_layout(**LAYOUT_BASE,yaxis_title="Número de Clínicas")
 
         return fig_pie, fig_src, fig_st, fig_care

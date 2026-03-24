@@ -12,7 +12,8 @@ def layout_popup_welcome():
             id="modal",
             children=[
                 html.Div([
-                    html.H3("Bienvenido 👋 a nuestro Trabajo 3: Ejercicio de Aplicacion Autónoma", style={"marginBottom": "10px"}),
+                    html.H3("Bienvenido 👋 ", style={"marginBottom": "10px"}),
+                    html.H3("A nuestro trabajo 3: Ejercicio de Aplicacion Autónoma", style={"marginBottom": "10px"}),
                     html.H4("📋 Información del Proyecto", style={"marginTop": "10px"}),
                     html.Div([
                         html.P("Autores:", style={"fontWeight": "600"}),
@@ -54,13 +55,13 @@ def layout_popup_welcome():
                             "marginRight": "auto"  # centrar botón
                     })
                 ], style={
- "background": "#1e293b",
-    "padding": "25px",
-    "borderRadius": "12px",
-    "textAlign": "left",
-    "color": "white",
-    "width": "350px",
-    "boxShadow": "0 10px 30px rgba(0,0,0,0.5)"
+                "background": "#1e293b",
+                    "padding": "25px",
+                    "borderRadius": "12px",
+                    "textAlign": "left",
+                    "color": "white",
+                    "width": "450px",
+                    "boxShadow": "0 10px 30px rgba(0,0,0,0.5)"
                 })
             ],
             style={

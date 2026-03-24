@@ -31,14 +31,21 @@ def register_callbacks(app, df, filt):
                                 nbins=40, 
                                 color="Admit Type",
                                 title="Distribución de Tiempos de Espera",
+                                labels={
+                                    "Wait Time Min": "Tiempo de espera en minutos"
+                                },                                
                                 barmode="overlay", 
                                 opacity=0.75)
-        fig_hist.update_layout(**LAYOUT_BASE)
+        fig_hist.update_layout(**LAYOUT_BASE,yaxis_title="Cantidad de atenciones")
 
         df_top8 = dff["Department"].value_counts().head(8).index.tolist()
         fig_box = px.box(dff[dff["Department"].isin(df_top8)],
                         x="Department", 
                         y="Wait Time Min", 
+                        labels={
+                            "Wait Time Min": "Tiempo de espera en minutos",
+                            "Department": "Especialidad"
+                        },                           
                         color="Department",
                         title="Distribución de Espera por Departamento (Top 8)")
         fig_box.update_layout(**LAYOUT_BASE, showlegend=False, xaxis_tickangle=-30)
@@ -49,7 +56,11 @@ def register_callbacks(app, df, filt):
         df_avg.columns = ["Department","Avg Wait"]
         fig_bar = px.bar(df_avg, x="Department", 
                          y="Avg Wait",
-                         title="Espera Promedio por Departamento", 
+                         title="Espera Promedio por Especialidad", 
+                         labels={
+                            "Avg Wait": "Promedio de tiempo de espera",
+                            "Department": "Especialidad"
+                         },                          
                          color="Avg Wait",
                          color_continuous_scale=[Colors["success"], Colors["warning"], Colors["danger"]])
         fig_bar.update_layout(**LAYOUT_BASE, xaxis_tickangle=-30, coloraxis_showscale=False)
