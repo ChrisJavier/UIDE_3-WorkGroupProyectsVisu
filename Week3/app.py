@@ -23,13 +23,19 @@ from callbacks.departamentos_cb import register_callbacks as dep_cb
 from callbacks.tendencia_cb import register_callbacks as ten_cb
 from callbacks.popup_welcome_cb import register_callbacks as popup_cb
 
-app = dash.Dash(__name__)
-server = app.server  
-
 # ── Inicialización de la app ──────────────────────────────────────
-app = dash.Dash(__name__, suppress_callback_exceptions=True)
-app.title = "Clinical Analytics Dashboard"
+# Solo una vez, con todos los parámetros necesarios
+app = dash.Dash(
+    __name__, 
+    suppress_callback_exceptions=True,
+    external_stylesheets=[# Si usas alguna fuente externa o CSS, ponlo aquí
+    ]
+)
 
+# ESTO ES VITAL: Definir server DESPUÉS de crear la app definitiva
+server = app.server 
+
+app.title = "Clinical Analytics Dashboard"
 
 # ── Layout principal ──────────────────────────────────────────────
 app.layout = html.Div([
