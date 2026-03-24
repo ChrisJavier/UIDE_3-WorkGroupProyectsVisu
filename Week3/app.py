@@ -21,13 +21,12 @@ from callbacks.espera_cb import register_callbacks as espera_cb
 from callbacks.departamentos_cb import register_callbacks as dep_cb
 #from callbacks.tendencia_cb import register_callbacks as ten_cb
 
-app = dash.Dash(__name__)
-server = app.server  
 
 # ── Inicialización de la app ──────────────────────────────────────
 app = dash.Dash(__name__, suppress_callback_exceptions=True)
 app.title = "Clinical Analytics Dashboard"
 
+server = app.server 
 
 # ── Layout principal ──────────────────────────────────────────────
 app.layout = html.Div([
