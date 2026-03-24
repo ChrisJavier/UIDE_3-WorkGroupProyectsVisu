@@ -76,31 +76,65 @@ def register_callbacks(app, df, filt):
 
         # Cambiar las coordeenadas de cada clinica
         coords_df = pd.DataFrame({
-                "Clinic Name": ["Lakeview Center", "Madison Center", "Surgery Center"],
-                "lat": [41.8781, 43.0731, 34.0522],
-                "lon": [-87.6298, -89.4012, -118.2437]
+        "Clinic Name": ["Lakeview Center", "Madison Center", "Surgery Center"],
+        "lat": [41.8781, 43.0731, 34.0522],
+        "lon": [-87.6298, -89.4012, -118.2437]
         })
 
         dff = dff.merge(coords_df, on="Clinic Name", how="left")
         dff["Wait Time Min"] = dff["Wait Time Min"].clip(lower=0)
 
-        df_map = dff.groupby(["Clinic Name", "lat", "lon"])["Wait Time Min"].mean().reset_index()
+        # 2. Agrupación segura (Wait Time y Patients al mismo tiempo)
+        df_map = dff.groupby(["Clinic Name", "lat", "lon"]).agg(
+        **{"Wait Time Min": pd.NamedAgg(column="Wait Time Min", aggfunc="mean")},
+        Patients=pd.NamedAgg(column="Encounter Number", aggfunc="count")
+        ).reset_index()
+
+        df_map["Category"] = pd.cut(
+        df_map["Wait Time Min"],
+        bins=[0, 20, 40, 100],
+        labels=["Bajo", "Medio", "Alto"]
+        )
+
         fig_map = px.scatter_mapbox(
-                df_map,
-                lat="lat",
-                lon="lon",
-                color="Wait Time Min",
-                size="Wait Time Min",
-                hover_name="Clinic Name",
-                title = "Mapa de USA con las clinicas",
-                zoom=4,
-                color_continuous_scale=["cyan", "red"]
-                )
+        df_map,
+        lat="lat",
+        lon="lon",
+        color="Wait Time Min",
+        size="Wait Time Min",
+        zoom= 3 ,
+        hover_data={
+                "Wait Time Min": True,
+                "Patients": True
+        },
+        hover_name="Clinic Name"
+        )
+
+        worst = df_map.loc[df_map["Wait Time Min"].idxmax()]
+
+        fig_map.add_scattermapbox(
+        lat=[worst["lat"]],
+        lon=[worst["lon"]],
+        mode='markers+text',
+        marker=dict(size=10, color='blue'),
+        text=["⚠️ Mayor espera"],
+        textposition="top center",
+        name="Clínica con mayor espera"
+        )
 
         fig_map.update_layout(    
-            mapbox_style="carto-darkmatter",
-    paper_bgcolor=Colors["bg"],
-    font=dict(color="white"),
-    margin=dict(l=0, r=0, t=30, b=0))
+            mapbox_style="open-street-map",
+                paper_bgcolor=Colors["bg"],
+                font=dict(color="white"),
+                margin=dict(l=0, r=0, t=30, b=0),
+                legend=dict(
+                yanchor="top",
+                y=0.95,       
+                xanchor="left",
+                x=0.02,       
+                bgcolor="rgba(0, 0, 0, 0.5)", 
+                bordercolor="white",
+                borderwidth=1
+        ))
 
         return fig_vol, fig_wait, fig_care, fig_adm, fig_map
