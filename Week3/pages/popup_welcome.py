@@ -17,11 +17,10 @@ def layout_popup_welcome():
                     html.H4("📋 Información del Proyecto", style={"marginTop": "10px"}),
                     html.Div([
                         html.P("Autores:", style={"fontWeight": "600"}),
-
                         html.Ul([
                             html.Li("CARRERA DIAZ CHRISTIAN JAVIER"),
-                            html.Li("CERNA PACHECO ROMEL MICHAEL"),
-                            html.Li("LUNA ARTEAGA ALEXANDER PAUL"),
+                            html.Li("QUISILEMA MEDRANO ALVARO MIJAEL"),
+                            html.Li("CARDENAS HERRERA EDISON GONZALO"),
                         ], style={"paddingLeft": "20px"}),
 
                         html.P("Versión: 1.0.0"),
