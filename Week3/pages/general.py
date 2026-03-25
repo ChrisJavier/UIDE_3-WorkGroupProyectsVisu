@@ -8,6 +8,7 @@ from data import df
 from components.ui_components import card, kpi, row2, create_graph
 from components.sidebar import sidebar
 from config import Colors
+from components.data_dictionary import data_dictionary
 
 def layout_general():
     """
@@ -48,6 +49,7 @@ def layout_general():
             "gap": "18px", 
             "alignItems": "flex-start"
             }),
+            data_dictionary(),
     ], style={
         "padding": "22px", 
         "maxWidth": "1400px", 
